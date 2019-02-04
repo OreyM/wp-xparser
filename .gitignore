@@ -1,0 +1,8 @@
+.idea
+node_modules
+package-lock.json
+develop/libs
+ready-app
+config/wp_conn.php
+images/game_img
+images/new_img
