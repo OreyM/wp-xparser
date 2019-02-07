@@ -32,7 +32,9 @@ function getParserGamesArray($queryResult, $count = FALSE) {
         # Счетчик прохода по каждой строке БД
         $loopCount++;
 
-        # Какие картинке к игре спарсенны, получаем иенна файлов
+        $titleImg = '';
+
+        # Какие картинке к игре спарсенны, получаем именна файлов
         if ($gameImgDir = opendir('../images/game_img/' . $queryData->game_id)) {
             while (false !== ($imgFile = readdir($gameImgDir))) {
                 if ($imgFile != '.' && $imgFile != '..') {

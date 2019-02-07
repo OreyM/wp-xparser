@@ -1,6 +1,6 @@
 <?php
-require_once 'wp_content_functions.php';
 require_once '../config/config.php';
+require_once 'wp_content_functions.php';
 
 $dump = new Dump();
 
@@ -24,6 +24,9 @@ $parserGamesArray = getParserGamesArray($resultParser, FALSE);
 
 # Путь хранения изображений для игр
 $gamesImgPath = 'http://bestbr3o.beget.tech/images/games/';
+
+$queryInsert = '';
+$queryUpdate = '';
 
 # Перебераем полученный массив игр
 foreach ( $parserGamesArray as $gameID => $gameData ) {
@@ -275,47 +278,45 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
     }
 }
 
-Debug::debug($queryInsert);
-Debug::debug($queryUpdate);
-
-//mysqli_multi_query($wp_link, $queryInsert);
-//mysqli_multi_query($wp_link, $queryUpdate);
+mysqli_multi_query($wp_link, $queryInsert);
+mysqli_multi_query($wp_link, $queryUpdate);
 
 mysqli_close($wp_link);
+mysqli_close($parser_link);
 
+
+// Parser DataBase connect
+$parser_link = connectDataBase(HOST, USERNAME, PASSWORD, DATABASE);
 // WP DataBase connect
-//$wp_link = connectDataBase(WP_HOST, WP_USERNAME, WP_PASSWORD, WP_DATABASE);
+$wp_link = connectDataBase(WP_HOST, WP_USERNAME, WP_PASSWORD, WP_DATABASE);
+
 
 # Проверяем актуальность игр
 # Массив игр сайта
-//$resultWP = mysqli_query($wp_link, "Select meta_value FROM pc_postmeta WHERE meta_key = 'game_id'");
-//$wpGamesArray = getWPGamesArray($resultWP);
+$resultWP = mysqli_query($wp_link, "Select meta_value FROM pc_postmeta WHERE meta_key = 'game_id'");
+$wpGamesArray = getWPGamesArray($resultWP);
 
-# Масив спарсенных игр
-//$newGamesArray = array();
-//foreach ($parserGamesArray as $gameData) {
-//    $newGamesArray[] = $gameData['game_id'];
-//}
+# Получаем масив всех игр, которые были спарсены
+$resultParser = mysqli_query($parser_link, "Select game_id FROM games");
+# Массив игр парсера
+while ( $parserGameID = $resultParser->fetch_object() )
+{
+    $parserGamesArray[] = $parserGameID->game_id;
+}
 
-# Проводим поиск в массивах, выявляя игры, которых нестало после последнего парсинга
-//foreach ( $wpGamesArray as $gameID  ) {
-//
-//    if ( !in_array( $gameID, $newGamesArray ) ) {
-//        # Получаем ID игры в таблице полей
-//        $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$gameID}'")->fetch_object();
-//        # Убираем актуальность игры  ..  _game_active -> field_5bb4b9da901ec
-//        updateGameField($wp_link, $resultCheck->post_id, 'game_active', '0');
-//        updateGameField($wp_link, $resultCheck->post_id, '_game_active', 'field_5bb4b9da901ec');
-//    }
-//}
+foreach ( $wpGamesArray as $wpGameID )
+{
+    if ( !in_array( $wpGameID, $parserGamesArray, FALSE) )
+    {
+        $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$wpGameID}'")->fetch_object();
+        # Убираем актуальность игры  ..  _game_active -> field_5bb4b9da901ec
+        updateGameField($wp_link, $resultCheck->post_id, 'game_active', '0');
+        updateGameField($wp_link, $resultCheck->post_id, '_game_active', 'field_5bb4b9da901ec');
+    }
+}
 
-//$dump->getDump($parserGamesArray);
-
-
-//mysqli_close($wp_link);
-//
-//mysqli_close($parser_link);
-
+mysqli_close($wp_link);
+mysqli_close($parser_link);
 
 // Полное время обновления БД сайта
 printf('Скрипт выполнялся %.4F сек.', (microtime(true) - $startInsertTime));

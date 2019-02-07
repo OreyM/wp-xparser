@@ -36,6 +36,7 @@ require_once 'config/config.php';
             <a href="start.php" class="btn btn-color-red">start parsing</a>
             <a href="games.php" class="btn btn-color-blue">form table</a>
             <a href="result.php" class="btn btn-color-orange">chek result</a>
+            <a href="scripts/wp_topical_games.php" class="btn btn-color-blue">check topical games</a>
         </div>
         <div id="discount-wrapp">
             <h4 class="discount-title">Get games discount</h4>
