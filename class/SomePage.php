@@ -18,8 +18,14 @@ class SomePage {
 
             $productLink = $parsingData->find('a')->attr('href');
 
-            if(substr($productLink, -6) == 'search')
+            echo $productLink . ' => ';
+
+            if ( substr( $productLink, -5 ) == 'chart' )
+                $productLink = str_replace('?cid=msft_web_chart', '', $productLink);
+            if ( substr( $productLink, -6 ) == 'search' )
                 $productLink = str_replace('?cid=msft_web_search', '', $productLink);
+
+            echo $productLink . '<br>';
 
             $productID = substr($productLink, -12);
 

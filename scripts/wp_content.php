@@ -2,20 +2,19 @@
 require_once '../config/config.php';
 require_once 'wp_content_functions.php';
 
-$dump = new Dump();
-
 $startInsertTime = microtime(true);
 
 
 // WP DataBase connect
-$wp_link = connectDataBase(WP_HOST, WP_USERNAME, WP_PASSWORD, WP_DATABASE);
+$wp_link = mysqli_connect(WP_HOST, WP_USERNAME, WP_PASSWORD, WP_DATABASE);
 # Получаем все игры по ID, что уже хранятся на сайте
 $resultWP = mysqli_query($wp_link, "Select meta_value FROM pc_postmeta WHERE meta_key = 'game_id'");
 
 // Parser DataBase connect
-$parser_link = connectDataBase(HOST, USERNAME, PASSWORD, DATABASE);
+$parser_link = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
 # Получаем масив всех игр, которые были спарсены
 $resultParser = mysqli_query($parser_link, "Select * FROM games");
+
 
 # Массив игр сайта
 $wpGamesArray = getWPGamesArray($resultWP);
@@ -228,6 +227,7 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
         $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$gameID}'")->fetch_object();
         $postID = $resultCheck->post_id;
 
+        /** Данные таблицы
         # Обновляем лучшую цену  ..  _game_bestPrice -> field_5bb491c5b42bc
         # Обновляем Цена до скидки  ..  _game_bfPrice -> field_5bb492fbb42bd
         # Обновляем Страна с лучшей ценой  ..  _game_bestContr -> field_5bb49331b42be
@@ -252,16 +252,20 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
         # Бесплатная игра  ..  _game_freeGame -> field_5bb600afa3bf7
         # Наличие скидки  ..  _game_discount -> field_5bb600e8a3bf8
         # Тип скидки  ..  _game_discountType -> field_5bb60108a3bf9
-        $queryUpdate .= "
+         */
+
+        if ( TRUE ) // for debug
+        {
+            $queryUpdate .= "
         UPDATE pc_postmeta SET meta_value = '{$gameData['country_price']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_bestPrice';
         UPDATE pc_postmeta SET meta_value = '{$gameData['before_discount']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_bfPrice';
         UPDATE pc_postmeta SET meta_value = '{$gameData['country']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_bestContr';
         UPDATE pc_postmeta SET meta_value = '{$gameData['game_link']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_link';
-        
+
         UPDATE pc_postmeta SET meta_value = '{$gameData['free_game']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_freeGame';
         UPDATE pc_postmeta SET meta_value = '{$gameData['discount']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_discount';
         UPDATE pc_postmeta SET meta_value = '{$gameData['discount_type']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_discountType';
-        
+
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_prc_1']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextPrc_1';
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_ctr_1']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextCntr_1';
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_link_1']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextLink_1';
@@ -274,16 +278,23 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_prc_4']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextPrc_4';
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_ctr_4']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextCntr_4';
         UPDATE pc_postmeta SET meta_value = '{$gameData['next_link_4']}' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_nextLink_4';
+        UPDATE pc_postmeta SET meta_value = '1' WHERE pc_postmeta.post_id = '{$postID}' AND pc_postmeta.meta_key = 'game_active';
         ";
+        }
     }
 }
 
+Debug::debug(mysqli_multi_query($wp_link, $queryUpdate));
+Debug::debug(mysqli_multi_query($wp_link, $queryInsert));
+
+/*
 mysqli_multi_query($wp_link, $queryInsert);
 mysqli_multi_query($wp_link, $queryUpdate);
+*/
+
 
 mysqli_close($wp_link);
 mysqli_close($parser_link);
-
 
 // Parser DataBase connect
 $parser_link = connectDataBase(HOST, USERNAME, PASSWORD, DATABASE);
@@ -310,8 +321,8 @@ foreach ( $wpGamesArray as $wpGameID )
     {
         $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$wpGameID}'")->fetch_object();
         # Убираем актуальность игры  ..  _game_active -> field_5bb4b9da901ec
+        mysqli_query($wp_link, "UPDATE pc_posts SET post_status = 'private' WHERE pc_posts.ID = '{$resultCheck->post_id}';");
         updateGameField($wp_link, $resultCheck->post_id, 'game_active', '0');
-        updateGameField($wp_link, $resultCheck->post_id, '_game_active', 'field_5bb4b9da901ec');
     }
 }
 

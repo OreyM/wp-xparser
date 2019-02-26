@@ -3,7 +3,17 @@
 
 
 function connectDataBase($host, $user, $password, $database) {
-    return mysqli_connect($host, $user, $password, $database);
+
+    $mysqli = @new mysqli($host, $user, $password, $database);
+
+// Работает в версиях PHP 5.2.9 и 5.3.0.
+    if ($mysqli->connect_error) {
+        die('Ошибка при подключении: ' . $mysqli->connect_error);
+    }
+    else
+    {
+        return $mysqli;
+    }
 }
 
 function getWPGamesArray ($queryResult) {
@@ -89,77 +99,78 @@ function getParserGamesArray($queryResult, $count = FALSE) {
 
 function insertGamePost ($dbConnect, $post_author, $post_title, $post_status, $post_name, $post_parent, $guid, $post_type, $post_mime_type) {
 
-    //NEW GAME
-
-//    $pc_posts = [
-//
-//        'ID' => NULL,
-//        'post_author' => '1', //
-//        'post_date' => '0000-00-00 00:00:00.000000',
-//        'post_date_gmt' => '0000-00-00 00:00:00.000000',
-//        'post_content' => '',
-//        'post_title' => $gameName, //
-//        'post_excerpt' => '',
-//        'post_status' => 'draft', //
-//        'comment_status' => 'closed',
-//        'ping_status' => 'closed',
-//        'post_password' => '',
-//        'post_name' => '',
-//        'to_ping' => '',
-//        'pinged' => '',
-//        'post_modified'	=> '0000-00-00 00:00:00.000000',
-//        'post_modified_gmt'	=> '0000-00-00 00:00:00.000000',
-//        'post_content_filtered' => '',
-//        'post_parent' => '0', //
-//        'guid' => '',
-//        'menu_order' => '0',
-//        'post_type' => 'games', //
-//        'post_mime_type' => '', //
-//        'comment_count' => '0'
-//
-//    ];
-
-    //NEW IMG
-
-//    $pc_posts = [
-//
-//        'ID' => NULL,
-//        'post_author' => '1', //
-//        'post_date' => '0000-00-00 00:00:00.000000',
-//        'post_date_gmt' => '0000-00-00 00:00:00.000000',
-//        'post_content' => '',
-//        'post_title' => $gameName, //
-//        'post_excerpt' => '',
-//        'post_status' => 'draft', //
-//        'comment_status' => 'closed',
-//        'ping_status' => 'closed',
-//        'post_password' => '',
-//        'post_name' => $img,
-//        'to_ping' => '',
-//        'pinged' => '',
-//        'post_modified'	=> '0000-00-00 00:00:00.000000',
-//        'post_modified_gmt'	=> '0000-00-00 00:00:00.000000',
-//        'post_content_filtered' => '',
-//        'post_parent' => $postGameID, //
-//        'guid' => '{$imgPath}{$gameID}/{$img}',
-//        'menu_order' => '0',
-//        'post_type' => 'attachment', //
-//        'post_mime_type' => 'image/jpeg', //
-//        'comment_count' => '0'
-//
-//    ];
+    /**
+     * NEW GAME
+     $pc_posts = [
+    'ID' => NULL,
+    'post_author' => '1', //
+    'post_date' => '0000-00-00 00:00:00.000000',
+    'post_date_gmt' => '0000-00-00 00:00:00.000000',
+    'post_content' => '',
+    'post_title' => $gameName, //
+    'post_excerpt' => '',
+    'post_status' => 'draft', //
+    'comment_status' => 'closed',
+    'ping_status' => 'closed',
+    'post_password' => '',
+    'post_name' => '',
+    'to_ping' => '',
+    'pinged' => '',
+    'post_modified'	=> '0000-00-00 00:00:00.000000',
+    'post_modified_gmt'	=> '0000-00-00 00:00:00.000000',
+    'post_content_filtered' => '',
+    'post_parent' => '0', //
+    'guid' => '',
+    'menu_order' => '0',
+    'post_type' => 'games', //
+    'post_mime_type' => '', //
+    'comment_count' => '0'
+    ];
+     */
+    /**
+     * NEW IMG
+     $pc_posts = [
+    'ID' => NULL,
+    'post_author' => '1', //
+    'post_date' => '0000-00-00 00:00:00.000000',
+    'post_date_gmt' => '0000-00-00 00:00:00.000000',
+    'post_content' => '',
+    'post_title' => $gameName, //
+    'post_excerpt' => '',
+    'post_status' => 'draft', //
+    'comment_status' => 'closed',
+    'ping_status' => 'closed',
+    'post_password' => '',
+    'post_name' => $img,
+    'to_ping' => '',
+    'pinged' => '',
+    'post_modified'	=> '0000-00-00 00:00:00.000000',
+    'post_modified_gmt'	=> '0000-00-00 00:00:00.000000',
+    'post_content_filtered' => '',
+    'post_parent' => $postGameID, //
+    'guid' => '{$imgPath}{$gameID}/{$img}',
+    'menu_order' => '0',
+    'post_type' => 'attachment', //
+    'post_mime_type' => 'image/jpeg', //
+    'comment_count' => '0'
+    ];
+     */
 
     # Запрос для добавление данных в БД
     $postInsert = "
     INSERT INTO `pc_posts`
-    (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`)
+    (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`)
 
     VALUES
 
-    (NULL, '{$post_author}', '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', '', '{$post_title}', '', '{$post_status}', 'closed', 'closed', '', '{$post_name}', '', '', '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', '', '{$post_parent}', '{$guid}', '0', '{$post_type}', '{$post_mime_type}', '0');
+    ('{$post_author}', '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', '', '{$post_title}', '', '{$post_status}', 'closed', 'closed', '', '{$post_name}', '', '', '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', '', '{$post_parent}', '{$guid}', '0', '{$post_type}', '{$post_mime_type}', '0');
     ";
 
-    $result = mysqli_query($dbConnect, $postInsert) or die("Ошибка " . mysqli_error($result));
+    if (!mysqli_query($dbConnect, $postInsert)) {
+        printf("Не удалось добавить данные в таблицу WP! Причина: %s", mysqli_error( $dbConnect ) );
+        exit;
+    }
+
     return mysqli_insert_id($dbConnect);
 }
 
@@ -175,24 +186,23 @@ function insertGameField ($dbConnect, $post_id, $meta_key, $meta_value, $id_quer
     (NULL, '{$post_id}', '{$meta_key}', '{$meta_value}');
     ";
 
-    $result = mysqli_query($dbConnect, $postFieldInsert) or die("Ошибка " . mysqli_error($result));
-
-    if ($id_query) {
-        return mysqli_insert_id($dbConnect);
+    if (!mysqli_query($dbConnect, $postFieldInsert)) {
+        printf("Не удалось добавить данные в таблицу WP! Причина: %s", mysqli_error( $dbConnect ) );
+        exit;
     }
+
+    return mysqli_insert_id($dbConnect);
 }
 
 function updateGameField ($dbConnect, $post_id, $meta_key, $meta_value) {
 
     # Запрос для обновления данных в таблице полей
     $postFieldUpdate = "
-    UPDATE 
-    `pc_postmeta` 
-    SET 
-    `meta_value` = '{$meta_value}' 
-    WHERE 
-    `pc_postmeta`.`post_id` = {$post_id} AND `pc_postmeta`.`meta_key` = '{$meta_key}';
+    UPDATE pc_postmeta SET meta_value = '{$meta_value}' WHERE pc_postmeta.post_id = {$post_id} AND pc_postmeta.meta_key = '{$meta_key}';
     ";
 
-    mysqli_query($dbConnect, $postFieldUpdate);
+    if (!mysqli_query($dbConnect, $postFieldUpdate)) {
+        printf("Не удалось обновить данные в таблицу WP! Причина: %s", mysqli_error( $dbConnect ) );
+        exit;
+    }
 }

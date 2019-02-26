@@ -206,8 +206,28 @@ class TableCreate {
                             $this->gamesArray[$gameID]['next_prc_4'] = (float)$gamePrice[$country];
                             next($gamePrice);
                         }
+                        else
+                        {
+                            $this->gamesArray[$gameID]['next_ctr_4'] = 'NO COUNTRY';
+                            $this->gamesArray[$gameID]['next_prc_4'] = '0';
+                        }
+                    }
+                    else
+                    {
+                        $this->gamesArray[$gameID]['next_ctr_3'] = 'NO COUNTRY';
+                        $this->gamesArray[$gameID]['next_prc_3'] = '0';
                     }
                 }
+                else
+                {
+                    $this->gamesArray[$gameID]['next_ctr_2'] = 'NO COUNTRY';
+                    $this->gamesArray[$gameID]['next_prc_2'] = '0';
+                }
+            }
+            else
+            {
+                $this->gamesArray[$gameID]['next_ctr_1'] = 'NO COUNTRY';
+                $this->gamesArray[$gameID]['next_prc_1'] = '0';
             }
         }
     }

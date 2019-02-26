@@ -23,8 +23,9 @@ class Database{
     }
 
     public function truncateTable(mysqli $db, $table){
-        if(($query = $db->query("TRUNCATE TABLE {$table}")) === FALSE)
-            self::errorDataBase($db);
+        return $db->query("TRUNCATE TABLE {$table}");
+//        if(($query = $db->query("TRUNCATE TABLE {$table}")) === FALSE)
+//            self::errorDataBase($db);
     }
 
     private static function queryParameters(array $table_param)

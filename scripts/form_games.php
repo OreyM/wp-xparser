@@ -2,6 +2,10 @@
 
 $dump = new Dump;
 
+$connect = Database::checkConnect();
+$db = $connect->connectDatabase();
+$db->query("TRUNCATE TABLE games");
+
 $tableCreate = new TableCreate();
 
 // Получаем список всех игр, Game ID, название игры
