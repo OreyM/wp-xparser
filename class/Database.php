@@ -17,6 +17,7 @@ class Database{
 
     public function connectDatabase(){
         $mysqli = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
+        $mysqli->set_charset("utf8");
         if ($mysqli->connect_errno)
             self::errorDataBase($mysqli);
         return $mysqli;

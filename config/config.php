@@ -1,11 +1,13 @@
 <?php
+
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 ini_set('max_execution_time', '999999');
+header('Content-Type: text/html; charset=utf-8');
 
 function autoloadClasses($className) {
-    $classPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'xparser.loc' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . $className . '.php';
+    $classPath = 'class' . DIRECTORY_SEPARATOR . $className . '.php';
 
     if (file_exists($classPath)) {
         require_once $classPath;
@@ -19,10 +21,11 @@ function autoloadClasses($className) {
 
 spl_autoload_register('autoloadClasses');
 
- //new Debug();
+// new Debug();
+
 
 //DATA to connect to Local DataBase
-define('HOST', 'localhost:8889');
+define('HOST', 'localhost');
 define('DATABASE', 'xparser');
 define('USERNAME', 'root');
 define('PASSWORD', 'root');

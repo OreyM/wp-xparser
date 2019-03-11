@@ -1,6 +1,9 @@
 <?php
 require_once '../config/config.php';
+require_once '../class/debug/Debug.php';
 require_once 'wp_content_functions.php';
+
+new Debug;
 
 $startInsertTime = microtime(true);
 
@@ -283,9 +286,8 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
         }
     }
 }
-
-Debug::debug(mysqli_multi_query($wp_link, $queryUpdate));
-Debug::debug(mysqli_multi_query($wp_link, $queryInsert));
+$getData = $queryUpdate . $queryInsert;
+Debug::debug(mysqli_multi_query($wp_link, $getData));
 
 /*
 mysqli_multi_query($wp_link, $queryInsert);
