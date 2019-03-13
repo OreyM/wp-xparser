@@ -25,7 +25,7 @@ $wpGamesArray = getWPGamesArray($resultWP);
 $parserGamesArray = getParserGamesArray($resultParser, FALSE);
 
 # Путь хранения изображений для игр
-$gamesImgPath = 'http://bestbr3o.beget.tech/images/games/';
+$gamesImgPath = 'https://playone.club/images/games/';
 
 $queryInsert = '';
 $queryUpdate = '';
@@ -226,8 +226,9 @@ INSERT INTO pc_postmeta (meta_id, post_id, meta_key, meta_value) VALUES (NULL, '
     }
     # Если игра уже есть в базе данных, обновляем ценны
     else {
+
         # Получаем ID игры в таблице полей
-        $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$gameID}'")->fetch_object();
+        $resultCheck = mysqli_query($wp_link, "Select post_id FROM pc_postmeta WHERE meta_value = '{$gameID}' AND meta_key = 'game_id'")->fetch_object();
         $postID = $resultCheck->post_id;
 
         /** Данные таблицы
@@ -298,6 +299,7 @@ mysqli_multi_query($wp_link, $queryUpdate);
 mysqli_close($wp_link);
 mysqli_close($parser_link);
 
+
 // Parser DataBase connect
 $parser_link = connectDataBase(HOST, USERNAME, PASSWORD, DATABASE);
 // WP DataBase connect
@@ -330,6 +332,7 @@ foreach ( $wpGamesArray as $wpGameID )
 
 mysqli_close($wp_link);
 mysqli_close($parser_link);
+
 
 // Полное время обновления БД сайта
 printf('Скрипт выполнялся %.4F сек.', (microtime(true) - $startInsertTime));
