@@ -78,7 +78,7 @@ foreach ($countryArray as $tableName => $countryID) {
     $allGamesUrl = $gamesParsing->getUrls(GAMES_SITE, $sitePage, $countryID);
 
     //Собираем первичные данные
-    $gamesParsing->allGameParsing(GAMES_SITE, $allGamesPageElements, $tableName, TRUE);
+    $gamesParsing->allGameParsing(GAMES_SITE, $allGamesPageElements, $tableName, true);
 
     //Получение данных по бесплатным играм
     $freeGamesArray = $gamesParsing->getFreeGamesUrl();

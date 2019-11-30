@@ -56,51 +56,5 @@ require_once 'scripts/parsing.php';
     </div>
 </div>
 
-
-<!--<style>-->
-<!--    th, td {-->
-<!--        border-bottom: 2px solid;-->
-<!--        padding: 6px 0;-->
-<!--    }-->
-<!--</style>-->
-
-<!--    <table border="1"">-->
-<!--        <tr style="background-color: #212121;color: #fff;">-->
-<!--            <th style="width: 52px;">№</th>-->
-<!--            <th>Country</th>-->
-<!--            <th style="width: 122px;">Game Price</th>-->
-<!--            <th style="width: 122px;">BFD Price</th>-->
-<!--            <th>Free Game</th>-->
-<!--            <th>Discount</th>-->
-<!--            <th>Game ID</th>-->
-<!--            <th>Game Name</th>-->
-<!--            <th>Recommend</th>-->
-<!--<!--            <th>Prod Desc</th>-->-->
-<!--        </tr>-->
-<!--        --><?php //$count = 1; ?>
-<!--        --><?php //foreach ($readyData as $data): ?>
-<!--        <tr>-->
-<!--            <td style="text-align: center;">--><?php //echo $count++; ?><!--</td>-->
-<!--            <td>--><?php //echo $data['country']; ?><!--</td>-->
-<!--            <td>--><?php //echo $data['game_price']; ?><!--</td>-->
-<!--            <td>--><?php //echo $data['before_discount']; ?><!--</td>-->
-<!--            <td>-->
-<!--                --><?php //if ($data['free_game']): ?>
-<!--                <strong>Free game</strong>-->
-<!--                --><?php //endif; ?>
-<!--            </td>-->
-<!--            <td>-->
-<!--                --><?php //if ($data['discount']): ?>
-<!--                    <strong>--><?php //echo $data['discount_type'] ?><!--</strong>-->
-<!--                --><?php //endif; ?>
-<!--            </td>-->
-<!--            <td>--><?php //echo $data['game_id']; ?><!--</td>-->
-<!--            <td><a href="--><?php //echo $data['game_link']; ?><!--" target="_blank">--><?php //echo $data['game_name']; ?><!--</a></td>-->
-<!--            <td>--><?php //echo $data['recommend']; ?><!--</td>-->
-<!--<!--            <td>-->--><?php ////echo $data['product_description']; ?><!--<!--</td>-->-->
-<!--        </tr>-->
-<!--        --><?php //endforeach; ?>
-<!--    </table>-->
-
 </body>
 </html>
